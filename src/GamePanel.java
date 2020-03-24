@@ -22,10 +22,12 @@ public class GamePanel extends JPanel {
   static public  double speed ;
     Image change[] = {bg1,bg2};
     Barriers b = new Barriers();
+    Level level = new Level();
 
-    public GamePanel(Slothe slothe,ArrayList<Rectangle> rects) throws IOException {
+    public GamePanel(Slothe slothe,ArrayList<Rectangle> rects, Level level) throws IOException {
         this.slothe=slothe;
         this.rects = rects;
+        this.level = level;
     //    pipeLength = ImageIO.read(new File("C:\\Users\\Ксюша\\Desktop\\untitled\\src\\78px-Pipe.png"));
     }
 
@@ -33,7 +35,7 @@ public class GamePanel extends JPanel {
 
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) throws NullPointerException{
      g.setColor(Color.WHITE);
      bg(g);
      slothe.draw(g);
@@ -41,12 +43,13 @@ public class GamePanel extends JPanel {
      b.draw(g);
      b.update();
 
+
  }
 
  public void bg(Graphics g){
         g.drawImage(change[0],xmove,0,null);
         g.drawImage(change[1],xmove1,0,null);
-     xmove -= speed;
+     xmove -= speed ;
      xmove1 -= speed;
 
      if(xmove == -width)

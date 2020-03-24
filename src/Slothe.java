@@ -2,7 +2,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 
 
@@ -17,9 +19,13 @@ public class Slothe {
     double vx = 0, vy;
     int ax, ay;
     int m = 1;
+    public int k = 0;
     public int runn = 0;
+    public int time, n;
      ArrayList<String> list = new ArrayList<>();
     ArrayList<String> listl = new ArrayList<>();
+    FileReader fileReader;
+    public  File level_number;
     public void addF(int fx, int fy) {
         ax += fx / m;
         ay += fy / m;
@@ -27,6 +33,10 @@ public class Slothe {
 
     public Slothe() throws IOException {
         slothee = ImageIO.read(new File("src/slothe.png"));
+
+        level_number = new File("src/level1.txt");
+        fileReader = new FileReader(level_number);
+        n = (fileReader.read(CharBuffer.allocate(0))) * 1000;
         list.add("src/slothe_l1.png");
         list.add("src/slothe_l1.png");
         list.add("src/slothe_l1.png");
@@ -55,6 +65,8 @@ public class Slothe {
         listl.add("src/slothe_r2.png");
         listl.add("src/slothe_r2.png");
         listl.add("src/slothe_r2.png");
+
+
     }
 
 
@@ -70,17 +82,13 @@ public class Slothe {
             cy = -height/2 + 100;
         if (cy <= -height/2+ 100)
             vy = 0;
-//        if (cx > width-5 ) {
+       if (cx > width-300 ) cx=width-300;
 //            ;
 //        }
 //        if (cx < 0)
 //            cx = 0;
 
-
-
-
-
-
+    //        System.out.println(k + " "+ n);
     }
     public void draw(Graphics g){
         g.setColor(Color.BLACK);

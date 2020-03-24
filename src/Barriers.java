@@ -21,6 +21,7 @@ public class Barriers {
 //            xpr = 0;
 //        if (slothe.cx >= 1000)
 //            xpr = 0;
+        //System.out.println("Yes");
     }
 
 }

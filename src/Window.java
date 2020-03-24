@@ -9,33 +9,38 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class Window  implements KeyListener, ActionListener {
     JPanel panel;
+    JFrame frame = new JFrame("The slothe.");
     Slothe slothe;
-    int time;
+   public int time, n, k;
     Timer t;
-    boolean paused;
+    boolean paused, finish = false;
     public int score=time;
     ArrayList <Rectangle> rects;
     Toolkit kit = Toolkit.getDefaultToolkit();
     Image slotheel1,slotheel2, slothee, slotheel3;
     FileReader fileReader;
-  public  File level;
-    public String picture;
-    public void go () throws IOException {
+  public  File level_number;
+  Level level;
 
-        JFrame frame = new JFrame("The slothe.");
+    public String picture;
+    public void go () throws IOException, FileNotFoundException {
+
+
         slothe = new Slothe();
         rects = new ArrayList<Rectangle>();
         slothe.addF(0, -2);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);//при закрытии окошка-программа автоматически завершается
-        panel = new GamePanel(slothe,rects);//добавляем в панель объекты
+        panel = new GamePanel(slothe,rects, level);//добавляем в панель объекты
         frame.add(panel);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);//делаем окошко видимым
@@ -44,10 +49,12 @@ public class Window  implements KeyListener, ActionListener {
         ImageIcon icon = new ImageIcon("src/icon2.png");
         frame.setIconImage(icon.getImage());
         paused = true;
+        finish = false;
         t = new Timer(10 , this);
         t.start();
         slothee = ImageIO.read(new File("src/slothe.png"));
-        level = new File("");
+        level = new Level();
+        level_number = new File("src/level1.txt");
 //        try(FileReader reader = new FileReader("notes3.txt"))
 //        {
 //            int c;
@@ -60,37 +67,27 @@ public class Window  implements KeyListener, ActionListener {
 //
 //            System.out.println(ex.getMessage());
 //        }
-        fileReader = new FileReader(level);
+        fileReader = new FileReader(level_number);
+        n = (fileReader.read())*30;
+
 
     }
 
     public static void main(String[] args) throws IOException {
         new Window().go();
-
     }
     @Override
     public void actionPerformed (ActionEvent actionEvent){
         panel.repaint();
-        if (!paused){
-            slothe.physics();
+     //   System.out.println(finish);
+       // System.out.println("YES");
+        level.end(n,k,finish);
+       // System.out.println(finish);
+        if (finish) {
+       //     System.out.println("Yes");
+            panel.removeAll();
+            frame.removeAll();
 
-//            if(slothe.cx>100){
-////                System.out.println("yes");
-//                Rectangle r2 = new Rectangle(slothe.width,slothe.height/2 +200, 50,70);
-//                rects.add(r2);
-//            }
-//
-//            ArrayList<Rectangle> toRemove = new ArrayList<Rectangle>();
-//            for(Rectangle r : rects) {
-//
-//                r.x = slothe.width-50;
-//
-//
-//                if (r.x + r.width <= 0) {
-//                    toRemove.add(r);
-//
-//                }
-//            }
         }
 
     }
@@ -109,12 +106,14 @@ public class Window  implements KeyListener, ActionListener {
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
+
         }
         if (e.getKeyCode() == KeyEvent.VK_RIGHT){
             slothe.vx+=0.1;
             while (GamePanel.speed<5)
             GamePanel.speed+=1;
             slothe.rundraw();
+            k= (k + slothe.cx);
 
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT){
