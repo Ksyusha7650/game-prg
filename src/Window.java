@@ -20,10 +20,14 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 public class Window  implements KeyListener, ActionListener {
     JPanel panel;
     JFrame frame = new JFrame("The slothe.");
-    Slothe slothe;
-   public int time, n, k;
-    Timer t;
-    boolean paused, finish = false;
+    JFrame fr= new JFrame("Finish");
+    static Slothe slothe;
+   public int time;
+    public int n;
+    public static int k;
+    static Timer t;
+    static boolean paused;
+    JButton pause;
     public int score=time;
     ArrayList <Rectangle> rects;
     Toolkit kit = Toolkit.getDefaultToolkit();
@@ -31,11 +35,15 @@ public class Window  implements KeyListener, ActionListener {
     FileReader fileReader;
   public  File level_number;
   Level level;
+  Menu menu1;
+ Barriers b;
+
 
     public String picture;
     public void go () throws IOException, FileNotFoundException {
 
-
+        fr.setSize(200,300);
+        fr.setDefaultCloseOperation(EXIT_ON_CLOSE);
         slothe = new Slothe();
         rects = new ArrayList<Rectangle>();
         slothe.addF(0, -2);
@@ -49,24 +57,15 @@ public class Window  implements KeyListener, ActionListener {
         ImageIcon icon = new ImageIcon("src/icon2.png");
         frame.setIconImage(icon.getImage());
         paused = true;
-        finish = false;
         t = new Timer(10 , this);
         t.start();
         slothee = ImageIO.read(new File("src/slothe.png"));
         level = new Level();
+        b = new Barriers();
+        menu1 = new Menu();
+
+        menu1.close(panel, frame);
         level_number = new File("src/level1.txt");
-//        try(FileReader reader = new FileReader("notes3.txt"))
-//        {
-//            int c;
-//            while((c=reader.read())!=-1){
-//
-//                System.out.print((char)c);
-//            }
-//        }
-//        catch(IOException ex){
-//
-//            System.out.println(ex.getMessage());
-//        }
         fileReader = new FileReader(level_number);
         n = (fileReader.read())*30;
 
@@ -79,15 +78,21 @@ public class Window  implements KeyListener, ActionListener {
     @Override
     public void actionPerformed (ActionEvent actionEvent){
         panel.repaint();
-     //   System.out.println(finish);
-       // System.out.println("YES");
-        level.end(n,k,finish);
-       // System.out.println(finish);
-        if (finish) {
-       //     System.out.println("Yes");
-            panel.removeAll();
-            frame.removeAll();
 
+        if(t.isRunning()) {
+            //   System.out.println(finish);
+            // System.out.println("YES");
+            level.end(n, k);
+            // System.out.println(finish);
+            if (level.finish) {
+                panel.removeAll();
+                frame.removeAll();
+                //   fr.setJMenuBar(menu1.menuBar);
+                //menu.close(fr);
+
+                fr.show();
+
+            }
         }
 
     }
@@ -113,12 +118,14 @@ public class Window  implements KeyListener, ActionListener {
             while (GamePanel.speed<5)
             GamePanel.speed+=1;
             slothe.rundraw();
-            k= (k + slothe.cx);
+            Barriers.vx += 0.1;
+            k= (k + slothe.cx/100);
 
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT){
             slothe.vx-=0.1;
             slothe.rundrawl();
+
         }
     }
 
@@ -128,6 +135,7 @@ public class Window  implements KeyListener, ActionListener {
             slothe.vx=0;
             GamePanel.speed=0;
             slothe.slothee = slothee;
+            Barriers.vx = 0;
     }
         if (e.getKeyCode() == KeyEvent.VK_LEFT){
             slothe.vx=0;

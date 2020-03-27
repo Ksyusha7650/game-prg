@@ -22,6 +22,7 @@ public class GamePanel extends JPanel {
   static public  double speed ;
     Image change[] = {bg1,bg2};
     Barriers b = new Barriers();
+    Barriers b1 = new Barriers();
     Level level = new Level();
 
     public GamePanel(Slothe slothe,ArrayList<Rectangle> rects, Level level) throws IOException {
@@ -40,8 +41,16 @@ public class GamePanel extends JPanel {
      bg(g);
      slothe.draw(g);
      slothe.physics();
+     if (Window.k > 20)
      b.draw(g);
-     b.update();
+     b.physics();
+     b.jump();
+        if (Window.k > 500)
+            b1.draw(g);
+        b1.physics();
+        b1.jump();
+        System.out.println(b1.x);
+      //  System.out.println(b.xpr +" " + Slothe.kx);
 
 
  }

@@ -1,12 +1,14 @@
 import java.awt.*;
 
 public class Level {
+    boolean finish;
     public Level() {
     }
-    public void end(int n, int k, boolean finish){
+    public void end(int n, int k){
         if (k > n)
            finish = true;
-            System.out.println(k + " " + n + " " + finish);
+        else finish = false;
+       //     System.out.println(k + " " + n + " " + finish);
 
     }
 }

@@ -15,7 +15,8 @@ public class Slothe {
     public int height = screensize.height;
     Image slothee;
     public String picture;
-    int cx = width / 2 - 250, cy=-height/2+1000;
+    static int kx,ky;
+   public int cx = width / 2 - 250, cy=-height/2+1000;
     double vx = 0, vy;
     int ax, ay;
     int m = 1;
@@ -82,13 +83,16 @@ public class Slothe {
             cy = -height/2 + 100;
         if (cy <= -height/2+ 100)
             vy = 0;
-       if (cx > width-300 ) cx=width-300;
+       if (cx > width-500 ) cx=width-500;
 //            ;
 //        }
-//        if (cx < 0)
-//            cx = 0;
+        if (cx < width/2)
+            cx = width/2;
 
     //        System.out.println(k + " "+ n);
+        kx = cx;
+        ky = cy;
+
     }
     public void draw(Graphics g){
         g.setColor(Color.BLACK);
