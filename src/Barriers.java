@@ -1,6 +1,19 @@
+import javafx.scene.transform.Scale;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageTranscoder;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.metadata.IIOMetadata;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.ImageGraphicAttribute;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ImageProducer;
 import java.io.IOException;
+import java.util.Random;
+
 
 public class Barriers extends Rectangle {
     Toolkit kit = Toolkit.getDefaultToolkit();
@@ -8,26 +21,29 @@ public class Barriers extends Rectangle {
     public int width = screensize.width;
     public int height = screensize.height;
     public int xpr;
-    public int ypr = Slothe.ky;
+    public int h = height/2 + 100;
+    public  int ypr = h;
     Slothe slothe;
     static public double vx ;
     public int speed = 10;
     Image pr1;
     Rectangle b,b1;
-
+    Paint paint;
     int m = 1;
+    BufferedImage im;
 
-    public Barriers() throws IOException {
+    public Barriers() {
         xpr = width;
-        b = new Rectangle(xpr,ypr,400,400);
-
-
     }
 
     public void draw(Graphics g){
         pr1 = new ImageIcon("src/pr.png").getImage();
-        g.drawImage(pr1, xpr,height/2 + 100,null);
-
+        g.drawImage(pr1, xpr,ypr,null);
+        b = new Rectangle(xpr,ypr,400,400);
+    }
+    public void draw2(Graphics g){
+        pr1 = new ImageIcon("src/pr.png").getImage();
+        g.drawImage(pr1, x,ypr,null);
     }
 
     public void update(){
@@ -43,20 +59,29 @@ public class Barriers extends Rectangle {
 
     public void physics() throws NullPointerException{
         xpr-=vx;
-        b.x-=vx;
 
     }
-    public void jump(){
-        if ( (b.x > Slothe.kx - 200)&&(b.x < Slothe.kx + 200)) {
-         //   System.out.println("yes");
+    public void jump() throws IOException {
+        if ((b.x > Slothe.kx - 200) && (b.x < Slothe.kx + 200)) {
+            //   System.out.println("yes");
 //            Window.slothe.cy+=30;
 //            Window.slothe.cx+=5;
-            Window.slothe.cy =- 265;
-          //  Window.t.stop();
-
+//            Window.slothe.cy = -265;
+            Window.slothe.cy = -ypr+270;
+            new Slothe().rundraw();
+            //  Window.t.stop();
 
         }
-       // System.out.println(b.getBounds());
+    }
+        public void jump2(){
+            if ( (b.x > Slothe.kx - 200)&&(b.x < Slothe.kx + 200)) {
+            Window.slothe.cy+=30;
+            Window.slothe.cx+=5;
+            }
+    }
+    public void hills(Graphics g){
+        x = xpr + 200;
+        draw2(g);
     }
 
 }

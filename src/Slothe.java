@@ -93,6 +93,7 @@ public class Slothe {
         kx = cx;
         ky = cy;
 
+
     }
     public void draw(Graphics g){
         g.setColor(Color.BLACK);

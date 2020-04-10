@@ -1,5 +1,7 @@
 
 
+import javazoom.jl.decoder.JavaLayerException;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -14,7 +16,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
+import java.util.Scanner;
 
+import static java.awt.Font.TYPE1_FONT;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class Window  implements KeyListener, ActionListener {
@@ -23,32 +27,31 @@ public class Window  implements KeyListener, ActionListener {
     JFrame fr= new JFrame("Finish");
     static Slothe slothe;
    public int time;
-    public int n;
     public static int k;
     static Timer t;
     static boolean paused;
-    JButton pause;
     public int score=time;
-    ArrayList <Rectangle> rects;
-    Toolkit kit = Toolkit.getDefaultToolkit();
-    Image slotheel1,slotheel2, slothee, slotheel3;
-    FileReader fileReader;
-  public  File level_number;
-  Level level;
-  Menu menu1;
+    static  Toolkit  kit = Toolkit.getDefaultToolkit();
+    static Dimension  screensize = kit.getScreenSize();
+    public static int width = screensize.width;
+    public static int height = screensize.height;
+    Image slothee;
+  static Level level;
+  static Menu menu1;
+  static Music music;
+    public JLabel m;
+    Font font = new Font("Verdana",Font.PLAIN,35);
+
  Barriers b;
-
-
-    public String picture;
-    public void go () throws IOException, FileNotFoundException {
-
-        fr.setSize(200,300);
+    public void go (int num) throws IOException, FileNotFoundException, JavaLayerException {
+        fr.setSize(width/2,height/2);
         fr.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        JLabel l = new JLabel("Level completed!!!");
+        fr.add(l);
         slothe = new Slothe();
-        rects = new ArrayList<Rectangle>();
         slothe.addF(0, -2);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);//при закрытии окошка-программа автоматически завершается
-        panel = new GamePanel(slothe,rects, level);//добавляем в панель объекты
+        panel = new GamePanel(slothe, level);//добавляем в панель объекты
         frame.add(panel);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);//делаем окошко видимым
@@ -61,28 +64,39 @@ public class Window  implements KeyListener, ActionListener {
         t.start();
         slothee = ImageIO.read(new File("src/slothe.png"));
         level = new Level();
-        b = new Barriers();
         menu1 = new Menu();
+        menu1.close(panel);
+        m = new JLabel();
+        m.setLocation(10,50);
+        m.setSize(100,100);
+        m.setBackground(Color.DARK_GRAY);
+        m.setFont(font);
+        panel.add(m);
 
-        menu1.close(panel, frame);
-        level_number = new File("src/level1.txt");
-        fileReader = new FileReader(level_number);
-        n = (fileReader.read())*30;
 
 
     }
 
-    public static void main(String[] args) throws IOException {
-        new Window().go();
+    public static void main(String[] args) throws IOException, JavaLayerException, NullPointerException {
+        new Menu().setMenu();
+        level =new Level();
+        music = new Music("src/1.mp3");
+        music.play();
     }
     @Override
     public void actionPerformed (ActionEvent actionEvent){
         panel.repaint();
-
+        m.setText(String.valueOf(k));
+//        if (Menu.ch ==300) {
+//            try {
+//                new Music().play(Level.song);
+//            } catch (JavaLayerException | IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
         if(t.isRunning()) {
-            //   System.out.println(finish);
-            // System.out.println("YES");
-            level.end(n, k);
+            level.end(k);
+           // Menu.ch ++;
             // System.out.println(finish);
             if (level.finish) {
                 panel.removeAll();
@@ -91,11 +105,12 @@ public class Window  implements KeyListener, ActionListener {
                 //menu.close(fr);
 
                 fr.show();
-
+                //System.out.println(n + " " + kl);
             }
         }
+        }
 
-    }
+
 
     @Override
     public void keyTyped (KeyEvent e){
@@ -105,13 +120,11 @@ public class Window  implements KeyListener, ActionListener {
     @Override
     public void keyPressed (KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            paused = false;
             try {
           slothe.jump(25);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
-
         }
         if (e.getKeyCode() == KeyEvent.VK_RIGHT){
             slothe.vx+=0.1;

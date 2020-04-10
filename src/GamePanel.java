@@ -1,35 +1,36 @@
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class GamePanel extends JPanel {
     Slothe slothe;
     Image  pipeLength;
-    Toolkit kit = Toolkit.getDefaultToolkit();
-    Dimension screensize = kit.getScreenSize();
     public int width = 1700;
-    ArrayList<Rectangle> rects;
-    static Image bg1 = new ImageIcon("src/back-ground.png").getImage();
-    static Image bg2 = new ImageIcon("src/back-ground.png").getImage();
+    static Image bg1 = new ImageIcon(Level.bg_path).getImage();
+    static Image bg2 = new ImageIcon(Level.bg_path).getImage();
    public int xmove, xmove1= width;
   static public  double speed ;
     Image change[] = {bg1,bg2};
-    Barriers b = new Barriers();
-    Barriers b1 = new Barriers();
-    Level level = new Level();
+    Barriers barriers [];
+    int i;
+    public int xpr;
 
-    public GamePanel(Slothe slothe,ArrayList<Rectangle> rects, Level level) throws IOException {
+    public GamePanel(Slothe slothe, Level level) throws IOException {
         this.slothe=slothe;
-        this.rects = rects;
-        this.level = level;
+        barriers = new Barriers[Level.am];
+
     //    pipeLength = ImageIO.read(new File("C:\\Users\\Ксюша\\Desktop\\untitled\\src\\78px-Pipe.png"));
+    }
+    public void painting_b(Graphics g) {
+        for (Barriers b: barriers) {
+            if (Window.k % 30 >= 15) {
+                b = new Barriers();
+                b.draw(g);
+                b.physics();
+            }
+        }
     }
 
 
@@ -41,15 +42,43 @@ public class GamePanel extends JPanel {
      bg(g);
      slothe.draw(g);
      slothe.physics();
-     if (Window.k > 20)
-     b.draw(g);
-     b.physics();
-     b.jump();
-        if (Window.k > 500)
-            b1.draw(g);
-        b1.physics();
-        b1.jump();
-        System.out.println(b1.x);
+     painting_b(g);
+
+//     if (Window.k > Level.k1) {
+//         b.draw(g);
+//         b.physics();
+//         b.hills(g);
+//         try {
+//             b.jump();
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+//     }
+//        if (Window.k > Level.k2) {
+//            b1.draw(g);
+//            b1.physics();
+//            try {
+//                b1.jump();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        if (Window.k > Level.k3){
+//            b2.draw(g);
+//            b2.physics();
+//            b2.jump2();
+//        }
+//        if (Window.k > Level.k4){
+//            b3.draw(g);
+//            b3.physics();
+//            b3.jump2();
+//        }
+//        if (Window.k > Level.k5){
+//            b4.draw(g);
+//            b4.physics();
+//            b4.jump2();
+//        }
+        //System.out.println(b1.x);
       //  System.out.println(b.xpr +" " + Slothe.kx);
 
 
