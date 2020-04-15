@@ -1,0 +1,1 @@
+src/back-ground.png 7500 150 20 1000 1300 1800 4000 src/true.mp3
